@@ -1,0 +1,2 @@
+#Ignore .env file becuase its got DB connection secrets in it
+.env
