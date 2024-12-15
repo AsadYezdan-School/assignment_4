@@ -1,2 +1,4 @@
 # assignment_4
-CRUD capable, full-stack app, JS + HTLML + CSS +DJANGO + POSTGRESQL
+Github repositiry for assignment 4 for FOP class:
+  - CRUD Capable Book Collection Manager
+  - Stack : JS + HTLML + CSS +DJANGO + POSTGRESQL
