@@ -1,0 +1,42 @@
+#Ignore .env file becuase its got DB connection secrets in it
+.env
+collectionManager/collectionManager/__pycache__/settings.cpython-312.pyc
+collectionManager/books/__pycache__/views.cpython-312.pyc
+collectionManager/books/__pycache__/urls.cpython-312.pyc
+../../../.angular-config.json
+../../../.bash_history
+../../../.cache/
+../../../.dotnet/
+../../../.gitconfig
+../../../.gradle/
+../../../.ipython/
+../../../.jupyter/
+../../../.keras/
+../../../.lesshst
+../../../.matplotlib/
+../../../.node_repl_history
+../../../.nuget/
+../../../.popsql.json
+../../../.templateengine/
+../../../.viminfo
+../../../.vscode/
+../../../AppData/
+../../../Bezier  Interpolation Data Science Tool
+../../../Contacts/
+../../../Downloads/
+../../../Favorites/
+../../../IntelGraphicsProfiles/
+../../../Links/
+../../../Music/
+../../../NTUSER.DAT
+../../../NTUSER.DAT{17ddc0ef-ba2b-11ed-89f7-b7549b791266}.TM.blf
+../../../NTUSER.DAT{17ddc0ef-ba2b-11ed-89f7-b7549b791266}.TMContainer00000000000000000001.regtrans-ms
+../../../NTUSER.DAT{17ddc0ef-ba2b-11ed-89f7-b7549b791266}.TMContainer00000000000000000002.regtrans-ms
+../../
+../../../Saved Games/
+../../../Searches/
+../../../Videos/
+../../../_viminfo
+../../../ntuser.dat.LOG1
+../../../ntuser.dat.LOG2
+../../../ntuser.ini
