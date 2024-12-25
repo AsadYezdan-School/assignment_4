@@ -83,7 +83,7 @@ DATABASES = {
 
 postgres_locally = True
 if postgres_locally:
-    DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'))
+    DATABASES['default'] = dj_database_url.parse(config('DB_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
