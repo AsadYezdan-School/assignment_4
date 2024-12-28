@@ -1,3 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
+
+/* Apply styles */
 body {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    font-family: 'Electrolize', sans-serif;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     background-color: #FFFAE6;
+    text-align: center; /* Center text alignment */
+}
+
+h1 {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    border: 2px solid black;
+    padding: 10px ;
+    background-color: #FFFAE6;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.text_wrapper {
+    margin-top: 20px;
+    width: 750 px; /* Adjust the width to be more responsive */
+    max-width: 1000px;
+    background-color: #FFFAE6;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 40px; /* Space below this section */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px; /* Add space below the search box */
+}
+
+.search-box {
+    padding: 10px 10px 10px 40px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    width: 300px; /* Adjust width for better responsiveness */
+    background-color: #ffffff;
+}
+
+.search-button {
+    padding: 11px 20px;
+    margin-left: 10px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 2px solid #000000;
+    cursor: pointer;
+}
+
+.crud_container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 125px;
+    width: 750px;
+    max-width: 800px;
+    margin-bottom: 40px; /* Add space below the CRUD buttons */
+}
+
+.crud_button {
+    padding: 11px 20px;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    cursor: pointer;
+}
+
+.activity-box {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: 750px;
+    max-width: 800px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px; /* Space below the activity box */
+    margin-left: 96px;
+}
+
+/* Title Styling */
+.activity-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Styling for the rows */
+.activity-row {
+    height: 30px;
+    width: 100%;
+    background-color: #e9e9e9;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.activity-row:hover {
+    background-color: #d1d1d1;
 }

@@ -7,11 +7,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-    <main>
-        Hello everybody, here shall stand the landing page
-    </main>
-</body>
+    <body>
+        <main>
+            <h1>Books - A Collection</h1>
+            <p class="text_wrapper"> 
+                Welcome to the Books collection manager. This is a university coursework assignment, it should be able to perform CRUD 
+                operations on a data set containing information on about 10,000 books that was sourced from an account on 
+                <a href = https://github.com/zygmuntz/goodbooks-10k/blob/8290077d92f858a99ccc3b5126b8667430c24d2d/README.md>GitHub</a>
+                who in turn collected it from GoodReads. CRUD operations + some visualisations cover the extent of what was required according
+                 to the assignment brief, anything else you see is bonus, because I felt like it :)
+            </p>
+            <div class="container">
+                <input type="text" class="search-box" placeholder="Search..." name="search">
+                <button class="search-button" onclick="">Search</button>
+            </div>
+            <div class = 'crud_container'>
+                <button class="crud_button" onclick="">Add Book To Collection</button>
+                <button class="crud_button" onclick="">Advanced Searched</button>
+                <button class="crud_button" onclick="">Delete Book From Collection</button>
+            </div>
+            <div class="activity-box">
+                <div class="activity-title">Recent Activity</div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+                <div class="activity-row"></div>
+            </div>
+        </main>
+    </body>
 </html>
 
 
