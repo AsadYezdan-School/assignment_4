@@ -18,8 +18,11 @@
                  to the assignment brief, anything else you see is bonus, because I felt like it :)
             </p>
             <div class="container">
-                <input type="text" class="search-box" placeholder="Search..." name="search">
-                <button class="search-button" onclick="">Search</button>
+                <form action="{% url 'queryDB' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" class="search-box" placeholder="Search by title..." name="search" pattern=".*\S.*" required>
+                    <button class="search-button" type="submit" name = 'searchString'>Search</button>
+                </form>
             </div>
             <div class = 'crud_container'>
                 <button class="crud_button" onclick="">Add Book To Collection</button>

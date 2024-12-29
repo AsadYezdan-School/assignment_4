@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name = "home"),
-    path("queryDB/", views.queryDB,name = "queryDB")
+    path("search-results/", views.queryDB,name = "queryDB")
 ]

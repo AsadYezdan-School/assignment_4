@@ -165,7 +165,7 @@ class Books(models.Model):
     isbn = models.CharField(max_length=20, blank=True, null=True)
     isbn13 = models.CharField(max_length=20, blank=True, null=True)
     authors = models.TextField(blank=True, null=True)
-    original_publication_year = models.FloatField(blank=True, null=True)
+    original_publication_year = models.IntegerField(blank=True, null=True)
     original_title = models.TextField(blank=True, null=True)
     title = models.TextField(blank=True, null=True)
     language_code = models.CharField(max_length=10, blank=True, null=True)
