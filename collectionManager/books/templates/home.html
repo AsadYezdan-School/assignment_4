@@ -19,13 +19,13 @@
             </p>
             <div class="container">
                 <form action="{% url 'queryDB' %}" method="POST">
-                    {% csrf_token %}
+                    {% csrf_token %}<!--Csrf token : for security when you change DB server state (ie when you query and bring something back from your database)-->
                     <input type="text" class="search-box" placeholder="Search by title..." name="search" pattern=".*\S.*" required>
                     <button class="search-button" type="submit" name = 'searchString'>Search</button>
                 </form>
             </div>
             <div class = 'crud_container'>
-                <button class="crud_button" onclick="">Add Book To Collection</button>
+                <button class="crud_button" onclick="window.location.href='http://127.0.0.1:8000/books/add-book/'"> {% csrf_token %} Add Book To Collection</button>
                 <button class="crud_button" onclick="">Advanced Searched</button>
                 <button class="crud_button" onclick="">Delete Book From Collection</button>
             </div>

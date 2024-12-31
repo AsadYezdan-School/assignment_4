@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
+import time
 from .models import Books
 from .models import BookTags
 from .models import Ratings
 from .models import Tags
 from .models import ToRead
-import tkinter as tk
-from tkinter import messagebox
-import time
+import json
 
 def home(request):
     #load the landing page
@@ -45,6 +45,33 @@ def queryDB(request):
                 return render(request, 'searchResults.html',{'some_books':some_books, 'title': title, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
     else:
      return HttpResponse(" The request wasnt a POST, this shouldnt happen")
+
+def addBook(request):
+    return render(request,'addBooks.html', )
+
+
+def validate_title(request):
+   print(" made it to the validation method!")
+   if request.method == 'GET':
+        title = request.GET.get('validate', '')
+        print(f"title = {title}")
+        if not title:
+            return JsonResponse({'valid': False, 'error': "No title provided"})
+        
+        #look through DB for books with the same title
+        match_title = Books.objects.filter(title__iexact=title).exists()
+        match_orig_title = Books.objects.filter(original_title__iexact=title).exists()
+        print("made it past the querying")
+        if not match_title and not match_orig_title:
+            return JsonResponse({'valid': True})
+        else :
+            return JsonResponse({'valid':False})
+   else:
+      print(request.method)
+      return HttpResponse("Not a GET request")
+      
+  
+   
 
 
       

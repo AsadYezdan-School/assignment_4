@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{% static 'books/css/addBooks.css' %}">
+<script src="{% static 'books/js/addBooks.js' %}"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+    <body>
+        <main>
+            <h1>Add A Book To The Database</h1>
+            <p>Enter some information abou the book you want to add to the database.</p>
+            <!--Gonna need to make some AJAX requests via JS to verify inputs into the fields below are valid-->
+            <div name = 'title'>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" class="search-box" placeholder=" Full Title" name="full_title" id = 'full_title' pattern=".*\S.*" required>
+                    <button onclick="validateTitle()" name = 'checkTitle'>Check Duplicates</button>
+                </form>
+            </div>
+            <div name = 'isbn'>
+                <form action="" method="POST"></form>
+                    <input type="text" class="search-box" placeholder="ISBN" name="isbn" pattern=".*\S.*" required>
+                </form>
+            </div>
+            <div name = authors>
+                <form action="" method="POST">    
+                    <input type="text" class="search-box" placeholder="Authors" name="authors" pattern=".*\S.*" required>
+                </form>
+            </div>
+            <div name = 'publicationYear'>
+                <form action="" method="POST">
+                    <input type="text" class="search-box" placeholder="Year Of Publication" name="title" pattern=".*\S.*" required>
+                </form>
+            </div>
+            <div name = 'url'>
+                <form action="" method="POST">
+                    <input type="text" class="search-box" placeholder="URL For Image" name="url" pattern=".*\S.*" required>
+                </form>
+            </div>
+            <div name = ' languageCode'>
+                <form action="" method="POST">
+                    <input type="text" class="search-box" placeholder="Language Code" name="title" pattern=".*\S.*" required>
+                </form>
+            </div>
+            <button class="search-button" type="submit" onclick="validateTitle()" name = 'searchString'>Search</button>
+       </main>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+body {
+    font-family: 'Electrolize', sans-serif;
+    display: flex;
+    margin: 20 px;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: flex-start; /* Align items from the top */
+    align-items: center; /* Center the content horizontally */
+    height: 100vh;
+    background-color: #FFFAE6;
+    text-align: center; /* Center text alignment */
+}
+
+
+.search-box {
+    margin-top: 20 px;
+    padding: 20px 20px 20px 20px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    width: 300px; /* Adjust width for better responsiveness */
+    background-color: #ffffff;
+}
+
+.search-button {
+    padding: 11px 20px;
+    margin-left: 10px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 2px solid #000000;
+    cursor: pointer;
+}

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{% static 'books/css/searchResults.css' %}">
+    <script src="{% static 'books/js/searchResults.js' %}"></script>
+</head>
+    <body>
+        <main>
+            <h1 class="title-container">Search Results For '{{title}}'</h1>
+            <p class = 'search-stats'>{{num_results}} results found in {{elapsed_time}} seconds.</p>
+            {%if list_too_long%}
+            <p class = 'search-error-messages'>The title you searched for is too vague, try something more specific, results shown here are the first 100 of {{num_results}} matches.</p>
+            {%elif no_results%}
+            <p class = 'search-error-messages'>The title you searched for doesnt match anything in the database. Try checking your spelling or adding a book to the database.</p>
+            {%endif%}
+            <div>
+                <form action="{% url 'queryDB' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="text" class = 'search-box' placeholder="Search by title..." name="search" pattern=".*\S.*" required>
+                    <button class="search-button" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="card-container">
+                {% for book in some_books %}
+                    <div class="card">
+                        <img src="{{ book.image_url}}" alt="{{ book.title }}" class="card-image">
+                        <h3 class="card-title">{{ book.title }}</h3>
+                        <p class="card-author">{{ book.authors }}</p>
+                        <p class="card-year_publihsed"> Published : {{book.original_publication_year}}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            {%if not no_results%}
+            <p>*Some books just have bad urls associated with them so we cant find any pictures *</p>
+            <p>*Theres not a whole lot we can do about that, sorry :)*</p>
+            {%endif%}
+
+        </main>
+    </body>
+</html>
+
+<!--TO DO LIST OF THINGS I COULD ADD
+2) Some stats on how good the matches are? (Tryna cater to the whole visualisations thing)
+-->
