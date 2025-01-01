@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 import time
+from django.db.models import Q
 from .models import Books
 from .models import BookTags
 from .models import Ratings
@@ -69,8 +70,123 @@ def validate_title(request):
    else:
       print(request.method)
       return HttpResponse("Not a GET request")
-      
-  
+
+def advanced_search(request):
+    start = time.perf_counter()
+    #get the fields and make a dictionary
+    fields ={
+    'title':request.POST.get('full_title') or "",
+    'authors':request.POST.get('authors') or "",
+    'isbn':request.POST.get('isbn') or "",
+    'year_published':request.POST.get('publication_year') or "",
+    'lang_code':request.POST.get('lang_code') or "",
+    'avg_rating':request.POST.get('avgRating') or "",
+    'rating_count':request.POST.get('ratingsCount') or "",
+    }
+    print(f'the fields dictionary :{fields}')
+    if any(value !='' for value in fields.values()):
+     #if any of the fields are full
+     do_search = True
+     some_books=Books.objects.all()
+     print(f"getting the whole set: {len(some_books)}")
+    
+    else:
+        #return a standard landing page
+        some_books =[]
+        elapsed_time = 0
+        num_results = 0
+        no_results=False
+        do_search = False
+        return render(request,'advancedSearch.html',{'some_books':some_books, 'elapsed_time': elapsed_time, 'num_results': num_results, 'fields': fields, 'no_results' : no_results, 'do_search': do_search})
+
+    for key, value in fields.items():
+        if value != '':# if field wasnt left empty
+            if key == 'title':
+                print('non empty title : ', value)
+                some_books = some_books.filter(Q(title__icontains=value) | Q(original_title__icontains=value))
+                print(f"lenght of some_books after filter = {len(some_books)}")
+            elif key == 'authors':
+                print("non empty authors: ", value)
+                some_books = some_books.filter(authors__icontains=value)
+                print(f"lenght of some_books after filter = {len(some_books)}")
+            elif key == 'isbn':
+                print("non empty isbn found : ", value)
+                some_books= some_books.filter(isbn__icontains=value)
+                print(f"lenght of some_books after filter = {len(some_books)}")
+            elif key == 'year_published':
+                print(" non empty year found : ", value)
+                if "<" in value or ">" in value: #check if a > or < than is used if not
+                    parameters = value.split()
+                    print(parameters)
+                    if parameters[0].strip() == '>':
+                        print(" year greater than", parameters[1])
+                        some_books=some_books.filter(original_publication_year__gt=parameters[1].strip())
+                        print(f"lenght of some_books after filter = {len(some_books)}")
+                    elif parameters[0].strip() == '<':
+                        print(" year less than", parameters[1])
+                        some_books.filter(original_publication_year__lt=parameters[1].strip())
+                        print(f"lenght of some_books after filter = {len(some_books)}")
+                    else:
+                        some_books = some_books.filter(original_publication_year=parameters[1].strip())
+                        print(f"lenght of some_books after filter = {len(some_books)}")
+                else:
+                    #default mode is exact comparison
+                    some_books = some_books.filter(original_publication_year=value)
+                    print(f"lenght of some_books after filter = {len(some_books)}")
+            elif key == 'lang_code':
+                print("non empty lang_code found", value )
+                some_books = some_books.filter(language_code=value)
+                print(f"lenght of some_books after filter = {len(some_books)}")
+            elif key == 'avg_rating':
+                print(" non empty avg rating : ", value)
+                if "<" in value or ">" in value: #check if a > or < than is used if not
+                    parameters = value.split()
+                    print(parameters)
+                    if parameters[0].strip() == '>':
+                        print(" avg rating greater than", parameters[1])
+                        print(f"length of some_books before filter = {len(some_books)}")
+                        some_books=some_books.filter(average_rating__gt=parameters[1].strip())
+                        print(f"lenght of some_books after filter = {len(some_books)}")
+                    elif parameters[0].strip() == '<':
+                        print(" avg rating less than", parameters[1])
+                        print(f"length of some_books before filter = {len(some_books)}")
+                        some_books.filter(average_rating__lt=parameters[1].strip())
+                        print(f"lenght of some_books after filter = {len(some_books)}")
+                    else:
+                        print(" no operators found")
+                        some_books = some_books.filter(average_rating=parameters[1].strip())
+                        print(f"lenght of some_books after filter = {len(some_books)}")
+                else:
+                    #default mode is exact comparison
+                    some_books = some_books.filter(average_rating=value)
+                    print(f"lenght of some_books after filter = {len(some_books)}")
+            elif key == 'rating_count':
+                print(" non empty rating count : ", value)
+                if "<" in value or ">" in value: #check if a > or < than is used if not
+                    parameters = value.split()
+                    print(parameters)
+                    if parameters[0].strip() == '>':
+                        print(" rating count greater than", parameters[1])
+                        some_books=some_books.filter(ratings_count__gt=parameters[1].strip())
+                    elif parameters[0].strip() == '<':
+                        print(" rating count less than", parameters[1])
+                        some_books.filter(ratings_count__lt=parameters[1].strip())
+                    else:
+                        print(" no operators found")
+                        some_books = some_books.filter(ratings_count=parameters[1].strip())
+                else:
+                    #default mode is exact comparison
+                    some_books = some_books.filter(ratings_count=value)
+    end = time.perf_counter()
+    no_results = False
+    elapsed_time = end - start
+    elapsed_time = round(elapsed_time,2)
+    num_results = len(some_books)
+    if len(some_books)==0:
+        no_results=True
+    return render(request,'advancedSearch.html',{'some_books':some_books, 'elapsed_time': elapsed_time, 'num_results': num_results, 'fields': fields, 'no_results' : no_results, 'do_search': do_search})
+    
+
    
 
 

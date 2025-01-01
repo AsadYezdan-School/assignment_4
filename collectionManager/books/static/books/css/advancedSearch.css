@@ -1,0 +1,124 @@
+/* Body styles */
+body {
+    font-family: 'Electrolize', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: flex-start; /* Align items from the top */
+    align-items: center; /* Center the content horizontally */
+    height: 100vh;
+    background-color: #FFFAE6;
+    text-align: center; /* Center text alignment */
+}
+
+/* Title container with margin to create space between title and content */
+.title-container {
+    margin-top: 50px; /* Adds space from the top of the page */
+    margin-bottom: 50px; /* Adds space between title and cards */
+}
+
+/* Title styling */
+h1 {
+    border: 2px solid black;
+    padding: 10px;
+    background-color: #FFFAE6;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    margin: 0; /* Remove default margin */
+}
+
+/* Card container styling */
+.card-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow cards to wrap to the next row */
+    gap: 25px; /* Creates 25px space between cards */
+    justify-content: space-between; /* Space out the cards evenly */
+    padding: 20px;
+    width: 1000px; /* Fixed width for the container */
+    margin: 0 auto; /* Centers the container horizontally */
+}
+
+/* Each individual card */
+.card {
+    width: 225px; /* Fixed width for each card */
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for card effect */
+    overflow: hidden; /* Ensures image doesn’t spill out */
+    text-align: center; /* Centers the text and image */
+}
+
+/* Image inside the card */
+.card-image {
+    width: 100%;
+    height: 350px; /* Adjust the height based on your image size */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+/* Title text inside the card */
+.card-title {
+    font-size: 1.2em;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* Author text inside the card */
+.card-author {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 10px;
+}
+.card-year_published{
+    font-size: 1em;
+    color :#666
+}
+
+.search-box {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width : 300px;
+    padding: 10px 10px 10px 40px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    background-color: #ffffff;
+}
+.search-button {
+    width : 200px;
+    padding: 11px 20px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 2px solid #000000;
+    cursor: pointer;
+}
+
+.search-stats{
+    font-size: 1.2em;
+    margin: 10px 0;
+    font-weight: bold;
+
+}
+
+.search-error-messages{
+    font-size: 1em;
+    margin: 10px 0;
+    font-weight: bold;
+
+}
+
+.form{
+    
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.p{
+    width : 300px;
+    display: flex;
+    align-content: center;
+}
+
+.search-terms{
+    width: 200px;
+}

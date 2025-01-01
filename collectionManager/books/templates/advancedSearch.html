@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'books/css/advancedSearch.css' %}">
+    <script src="{% static 'books/js/advancedSearch.js' %}" defer></script>
+</head>
+    <body>
+        <main>
+            <h1 class="title-container">Search Results</h1>
+            {% if do_search%}
+            <p class = 'search-stats'>{{num_results}} results found in {{elapsed_time}} seconds.</p>
+            <h2>
+             Search Terms :  
+            {% for key, value in fields.items %}
+                {{key}}= {{value}}, 
+            {% endfor %}
+            </h2>
+            {%endif%}
+            {%if no_results%}
+            <p class = 'search-error-messages'>The title you searched for doesnt match anything in the database. Try checking your spelling or adding a book to the database.</p>
+            {%endif%}
+            <p class = 'text-wrap'>
+                Enter whatever information you know about the books you are looking for, leave fields you dont know blank.<br>
+                Tip: Use > to find filter greater than or after, < to filter less than or before, the default is exact match. Only use in fields that take numbers(year, avg rating, rating count)<br>
+                Tip: Fields with a (P) allow partial matches so you can search for part of a title, autor name or ISBN.<br>
+                Example: '> 1999' will return books published after 1999, '< 56' will return books with less than 56 reviews and '4.50' will return books with avg rating of 4.50 (The space between is needed)<br>
+            </p>
+            <form id = "fields_form" class = 'form' action = "{% url 'advanced-search' %}" method = 'POST'>
+                {% csrf_token %}
+                <input type="text" class="search-box" placeholder=" Full Title (P)" name="full_title" id = 'full_title' pattern="^(?!\s*$).*$" >
+                <input type="text" class="search-box" placeholder="ISBN (P)" name="isbn" id = 'isbn' pattern="^(?!\s*$).*$">
+                <input type="text" class="search-box" placeholder="Authors (P)" name="authors" id = 'authors' pattern="^(?!\s*$).*$" >
+                <input type="text" class="search-box" placeholder="Year Of Publication" name="publication_year" id ='publication_year' pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$">
+                <input type="text" class="search-box" placeholder="Language Code" name="lang_code" id ='lang_code' pattern="^(?!\s*$).*$">
+                <input type="text" step="0.01" class="search-box" placeholder="Average Rating" name="avgRating" id = 'avgRating' pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$" >
+                <input type="text" class="search-box" placeholder="Number of Ratings" name="ratingsCount" id = 'ratingsCount'pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$">
+                <button class="search-button" type = 'submit' onclick="">Search</button>
+            </form>
+            <div class="card-container">
+                {% for book in some_books %}
+                    <div class="card">
+                        <img src="{{ book.image_url}}" alt="{{ book.title }}" class="card-image">
+                        <h3 class="card-title">{{ book.title }}</h3>
+                        <p class="card-author">{{ book.authors }}</p>
+                        <p class="card-year_publihsed"> Published : {{book.original_publication_year}}<br>Rating : {{ book.average_rating }}<br> ISBN : {{book.isbn}}</p>
+                    </div>
+                {% endfor %}
+            </div>
+            {%if not no_results%}
+            <p>(Remember that these searches go through more filtering so may take lonoger to load results)</p>
+            <p>*Some books just have bad urls associated with them so we cant find any pictures *</p>
+            <p>*Theres not a whole lot we can do about that, sorry :)*</p>
+            {%endif%}
+
+        </main>
+    </body>
+</html>
+
+<!--TO DO LIST OF THINGS I COULD ADD
+2) Some stats on how good the matches are? (Tryna cater to the whole visualisations thing)
+-->
