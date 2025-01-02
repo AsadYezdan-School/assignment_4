@@ -187,7 +187,10 @@ def advanced_search(request):
     return render(request,'advancedSearch.html',{'some_books':some_books, 'elapsed_time': elapsed_time, 'num_results': num_results, 'fields': fields, 'no_results' : no_results, 'do_search': do_search})
     
 
-   
+def delete_book(request):
+    context = {}
+    return render(request, 'deleteBook.html', context )
+
 
 
       
