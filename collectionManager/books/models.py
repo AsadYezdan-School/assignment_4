@@ -180,7 +180,9 @@ class Books(models.Model):
     ratings_5 = models.IntegerField(blank=True, null=True)
     image_url = models.TextField(blank=True, null=True)
     small_image_url = models.TextField(blank=True, null=True)
-
+    
+    def __str__(self):
+        return self.title
     class Meta:
         db_table = 'books'
         app_label = 'books'

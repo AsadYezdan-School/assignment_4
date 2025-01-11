@@ -8,13 +8,16 @@ from .models import BookTags
 from .models import Ratings
 from .models import Tags
 from .models import ToRead
-import json
+from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from .forms import BookForm
 
 def home(request):
     #load the landing page
     return render(request, 'home.html')
 
-def queryDB(request):
+def queryDB(request,searchString):
     #set some defaults for context
     some_books=[]
     elapsed_time = 0
@@ -22,15 +25,15 @@ def queryDB(request):
     list_too_long = False
     no_results = True
     empty_search = False
-    if request.method == 'POST':
-        title = request.POST.get('search')#get whatever the 
-        if len(title) == 0: #Disallow empty search, itll just try to return the WHOLE DB and crash and burn in a glorious blaze of light
+    if request.method == 'GET':
+        #title = request.POST.get('search')#get whatever the 
+        if len(searchString) == 0: #Disallow empty search, itll just try to return the WHOLE DB and crash and burn in a glorious blaze of light
           return render(request, 'home.html')
         else:
             start = time.perf_counter()# get information on DB Querying performance (potentially optimise it somehow)
-            some_books = Books.objects.filter(title__icontains=title)
+            some_books = Books.objects.filter(title__icontains=searchString)
             if len(some_books) == 0:
-                return render(request, 'searchResults.html',{'some_books':some_books, 'title': title, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
+                return render(request, 'searchResults.html',{'some_books':some_books, 'searchString': searchString, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
             else:
                 #if we get here (the hope is to get here almost always)we're all good to post results
                 #SQL Raw Query : SELECT book_id,authors, title FROM books WHERE title LIKE '%{title}%';
@@ -43,7 +46,7 @@ def queryDB(request):
                 if len(some_books)>100:
                     some_books = some_books[:100]
                     list_too_long = True
-                return render(request, 'searchResults.html',{'some_books':some_books, 'title': title, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
+                return render(request, 'searchResults.html',{'some_books':some_books, 'title': searchString, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
     else:
      return HttpResponse(" The request wasnt a POST, this shouldnt happen")
 
@@ -51,10 +54,9 @@ def addBook(request):
     return render(request,'addBooks.html', )
 
 
-def validate_title(request):
+def validate_title(request,title):
    print(" made it to the validation method!")
    if request.method == 'GET':
-        title = request.GET.get('validate', '')
         print(f"title = {title}")
         if not title:
             return JsonResponse({'valid': False, 'error': "No title provided"})
@@ -62,11 +64,30 @@ def validate_title(request):
         #look through DB for books with the same title
         match_title = Books.objects.filter(title__iexact=title).exists()
         match_orig_title = Books.objects.filter(original_title__iexact=title).exists()
-        print("made it past the querying")
+
         if not match_title and not match_orig_title:
             return JsonResponse({'valid': True})
         else :
             return JsonResponse({'valid':False})
+   else:
+      print(request.method)
+      return HttpResponse("Not a GET request")
+   
+def validate_isbn(request,checkIsbn):
+   print(" made it to the validation method!")
+   if request.method == 'GET':
+        print(f"isbn =  {checkIsbn}")
+        if not checkIsbn:
+            return JsonResponse({'valid': False, 'error': "No isbn provided"})
+        
+        #look through DB for books with the same title
+        querySet = Books.objects.filter(isbn=checkIsbn)
+        print(querySet.values())
+        match_isbn = querySet.exists()#returns true if the query set isnt empty
+        if not match_isbn:
+            return JsonResponse({'valid': True})
+        else :
+            return JsonResponse({'valid': False})
    else:
       print(request.method)
       return HttpResponse("Not a GET request")
@@ -187,10 +208,31 @@ def advanced_search(request):
     return render(request,'advancedSearch.html',{'some_books':some_books, 'elapsed_time': elapsed_time, 'num_results': num_results, 'fields': fields, 'no_results' : no_results, 'do_search': do_search})
     
 
-def delete_book(request):
+def upload_books(request):
     context = {}
     return render(request, 'deleteBook.html', context )
 
+def delete_book(request, id):
+    previous_url = request.META.get('HTTP_REFERER')
+    book = get_object_or_404(Books, book_id = id)
+    book.delete()
+    print("made it past deletion")
+    previous_url = request.META.get('HTTP_REFERER')
+    if previous_url:
+        return redirect(previous_url)
+    else:
+        return render(request, 'home.html')
+    
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            #actually add the book
+            form.save()
+            return redirect()#whatever a sucessful book addition looks like
+    else:
+        errors = form.errors
+        return render(request, 'add_book', {'form':form})
 
 
       

@@ -44,6 +44,11 @@
                         <h3 class="card-title">{{ book.title }}</h3>
                         <p class="card-author">{{ book.authors }}</p>
                         <p class="card-year_publihsed"> Published : {{book.original_publication_year}}<br>Rating : {{ book.average_rating }}<br> ISBN : {{book.isbn}}</p>
+                        <button onclick="toggle_menu()" class="ellipsis">⋯</button>
+                        <div id = drop_down class="options_menu">
+                            <button>Edit Details</button>
+                            <button>Delete Book</button>
+                        </div>
                     </div>
                 {% endfor %}
             </div>

@@ -6,3 +6,37 @@ function validateSearch() {
     }
     return true;  // Allow form submission
   }
+function submitQuery(event){
+  event.preventDefault();
+  var search_query = document.querySelector('.search-box').value;
+  console.log("Got the title its "+ search_query)
+  var newUrl = '/books/search-results/' + search_query + '/';
+  window.location.href = newUrl;
+
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Select all options buttons
+  var optionsButtons = document.querySelectorAll('.ellipsis');
+  console.log("made it to selecting all the options buttons")
+
+  optionsButtons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      console.log("we have a listner on each button")
+      // Get the book ID from the data attribute
+      var bookId = button.getAttribute('data-book-id');
+      
+      // Hide any currently open popups
+      var allPopups = document.querySelectorAll('.options_menu');
+      allPopups.forEach(function(popup) {
+        popup.style.display = 'none';
+      });
+
+      // Get the specific popup for this book and toggle it
+      var popup = document.getElementById('popup-' + bookId);
+      popup.style.display = (popup.style.display === 'block') ? 'none' : 'block';
+    });
+  });
+});
+
+

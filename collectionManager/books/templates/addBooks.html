@@ -12,17 +12,17 @@
         <main>
             <h1>Add A Book To The Database</h1>
             <p>Enter some information abou the book you want to add to the database.</p>
-            <!--Gonna need to make some AJAX requests via JS to verify inputs into the fields below are valid-->
+            <!--Gonna need to make some AJAX requests via JS to verify some of inputs into the fields below are valid-->
             <div name = 'title'>
-                <form method="POST">
-                    {% csrf_token %}
+                <form method="GET">
                     <input type="text" class="search-box" placeholder=" Full Title" name="full_title" id = 'full_title' pattern=".*\S.*" required>
-                    <button onclick="validateTitle()" name = 'checkTitle'>Check Duplicates</button>
+                    <button onclick="validateTitle(event)" name = 'checkTitle'>Check Duplicates</button>
                 </form>
             </div>
             <div name = 'isbn'>
                 <form action="" method="POST"></form>
-                    <input type="text" class="search-box" placeholder="ISBN" name="isbn" pattern=".*\S.*" required>
+                    <input type="text" class="search-box" placeholder="ISBN" name="isbn" id = 'isbn' pattern=".*\S.*" required>
+                    <button onclick="validateISBN(event)" name = 'checkISBN'>Check Duplicates</button>
                 </form>
             </div>
             <div name = authors>
@@ -45,7 +45,8 @@
                     <input type="text" class="search-box" placeholder="Language Code" name="title" pattern=".*\S.*" required>
                 </form>
             </div>
-            <button class="search-button" type="submit" onclick="validateTitle()" name = 'searchString'>Search</button>
+            <button onclick="validateInputs(event)">Check Duplicates</button>
+            <button class="sumbit-button" onclick = "addRecord(event)">Submit Data
        </main>
     </body>
 </html>

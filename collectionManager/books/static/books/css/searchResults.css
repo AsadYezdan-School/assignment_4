@@ -109,4 +109,11 @@ form {
     font-weight: bold;
 
 }
+.ellipsis {
+    font-size: 12px; /* Adjust size as needed */
+    cursor: pointer; /* Optional for interactive ellipsis */
+}
 
+.options_menu{
+    display:none
+}

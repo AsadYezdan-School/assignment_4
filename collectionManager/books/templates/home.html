@@ -18,16 +18,16 @@
                  to the assignment brief, anything else you see is bonus, because I felt like it :)
             </p>
             <div class="container">
-                <form action="{% url 'queryDB' %}" method="POST">
-                    {% csrf_token %}<!--Csrf token : for security when you change DB server state (ie when you query and bring something back from your database)-->
+                <form action="" method="POST" onsubmit="submitQuery(event)">
+                    {% csrf_token %}
                     <input type="text" class="search-box" placeholder="Search by title..." name="search" pattern=".*\S.*" required>
-                    <button class="search-button" type="submit" name = 'searchString'>Search</button>
+                    <button class="search-button" type="submit" name="searchString">Search</button>
                 </form>
             </div>
             <div class = 'crud_container'>
                 <button class="crud_button" onclick="window.location.href='/books/add-book/'"> {% csrf_token %} Add Book To Collection</button>
                 <button class="crud_button" onclick="window.location.href='/books/advanced-search'">Advanced Searched</button>
-                <button class="crud_button" onclick="window.lcoation.href='/books/delete-book'">Delete Book From Collection</button>
+                <button class="crud_button" onclick="window.location.href='/books/upload-books'">Upload From CSV</button>
             </div>
             <div class="activity-box">
                 <div class="activity-title">Recent Activity</div>
@@ -45,17 +45,3 @@
         </main>
     </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

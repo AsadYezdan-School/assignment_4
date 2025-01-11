@@ -14,3 +14,8 @@ document.getElementById('fields_form').addEventListener('submit', function(event
     }
 
 });
+
+function toggle_menu(){
+    var menu = document.getElementById("drop_down");
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block'; // toggle between showing the div and hiding it
+}
