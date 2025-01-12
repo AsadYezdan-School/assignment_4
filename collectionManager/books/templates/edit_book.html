@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{% static 'books/css/edit_book.css' %}">
+<script src="{% static 'books/js/edit_book.js' %}" defer></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+    <body>
+        <main>
+            <h1>Edit Details</h1>
+            <p>Here are all the fields for the book you want to edit: In order to update details, change whatever fields need changing, use the validate button to check your inputs are valid, then update</p>
+            <p>Your inputs will only be able to update if the check fields are valid (green), red means they are invalid, and yellow means there was an error checking</p>
+            <p>ISBN and ISBN13 should be unique</p>
+            <p>Title and original title should be unique</p>
+            {% for key,value in dictionary.items %}
+                {% if key == 'book_id'%}
+                <div name = {{key}}>
+                    <h4>{{key}}</h4>
+                    <form>
+                        <input type="text" class="book-id-box" placeholder="{{key}}" name="{{key}}" id = "{{key}}" value="{{value}}" pattern=".*\S.*" disabled required>
+                    </form>
+                </div>
+                {%elif key == 'title'%}
+                <div name = 'title'>
+                    <h4>title</h4>
+                    <form method="GET">
+                        <input type="text" class="search-box" placeholder="full_title" name="full_title" id = 'full_title' pattern=".*\S.*" value = "{{value}}" contenteditable="true" required>
+                    </form>
+                </div>
+                {%elif key == 'isbn'%}
+                <div name = 'isbn'>
+                    <h4>isbn</h4>
+                    <form action="" method="POST">
+                        <input type="text" class="search-box" placeholder="ISBN" name="isbn" id = 'isbn' pattern=".*\S.*" value = "{{value}}" contenteditable="true" required>
+                    </form>
+                </div>
+                {%elif key == 'original_title'%}
+                <div name = 'original_title'>
+                    <h4>original_title</h4>
+                    <form method="GET">
+                        <input type="text" class="search-box" placeholder="Full Title" name="full_title" id = 'original_title' pattern=".*\S.*" value = "{{value}}" contenteditable="true" required>
+                    </form>
+                </div>
+                {% else %}
+                <div name = {{key}}>
+                    <h4>{{key}}</h4>
+                    <form>
+                        <input type="text" class="search-box" placeholder="{{key}}" name="{{key}}" id = "{{key}}" value="{{value}}" pattern=".*\S.*" required>
+                    </form>
+                </div>
+                {%endif%}
+            {%endfor%}
+            <button class = "validate-button" onclick="validateInputs(event)">Validate Inputs</button>
+            <form onsubmit = "updateRecord(event)">
+                {% csrf_token %}
+                <button class="submit-button" type="submit" id="submit_button" disabled>Add Book</button>
+            </form>
+       </main>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

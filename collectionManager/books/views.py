@@ -74,6 +74,42 @@ def validate_title(request,title):
       print(request.method)
       return HttpResponse("Not a GET request")
    
+def validate_title_update(request,title,id):
+    print(f"validating {title} for update...")
+    if request.method == 'GET':
+        print(f"title = {title}")
+        print(f"book_id = {id}")
+        book = book = Books.objects.get(book_id=id)
+        check_title = book.title #get old title, the one attached to the book
+        print(f"Data to check on : old isbn : {check_title}, new isbn : {title}")
+       
+        if not title:#ie new title is empty
+            return JsonResponse({'valid': False, 'error': "No title provided"})
+        
+        #check if new title = old title, if yes then its valid
+        if title == check_title:
+            print("old matches new, we good")
+            print(f"{title} IS valid,")
+            return JsonResponse({'valid': True})
+       
+        # if new title not equal old title, ie its been changed, then we need to check if it matches anything else in the DB thats not the old title
+        allBooks = Books.objects.all()
+        print(f"size of all books : {len(allBooks)}")
+        excluding_old_title = allBooks.exclude(title__iexact=check_title).filter(original_title__iexact=check_title)# exclude anything where title matches the old one
+        print(f"size of all books excluding the old title : {len(excluding_old_title)}")
+        match_title = excluding_old_title.exclude(title__iexact=title).exists()
+        match_orig_title = excluding_old_title.filter(original_title__iexact=title).exists()
+        if not match_title and not match_orig_title:
+            print(f"{title} IS valid")
+            return JsonResponse({'valid': True})
+        else :
+            print(f"{title} IS NOT valid")
+            return JsonResponse({'valid':False})
+    else:
+      print(request.method)
+      return HttpResponse("Not a GET request")
+
+
 def validate_isbn(request,checkIsbn):
    print(f" validating {checkIsbn}...")
    if request.method == 'GET':
@@ -94,6 +130,78 @@ def validate_isbn(request,checkIsbn):
       print(request.method)
       return HttpResponse("Not a GET request")
 
+def validate_isbn_update(request,checkIsbn,id):
+    print(f" validating {checkIsbn} for update:")
+    if request.method == 'GET':
+        print(f"title = {checkIsbn}")
+        print(f"book_id = {id}")
+        book = book = Books.objects.get(book_id=id)
+        check_isbn = book.isbn # get old isbn, the one attached to the book
+        print(f"Data to check on : old isbn : {check_isbn}, new isbn : {checkIsbn}")
+        if not checkIsbn:#ie if there isnt a new isin to check
+            return JsonResponse({'valid': False, 'error': "No title provided"})
+       
+        #check if new isbn = old isbn, if yes then its valid
+        if checkIsbn == check_isbn:
+            print("Old and new match we are good")
+            print(f"{check_isbn} IS valid")
+            return JsonResponse({'valid': True})
+        
+        # if new isbn not equal old isbn, ie its been changed, then we need to check if it matches anything else in the DB thats not the old isbn
+        allBooks = Books.objects.all()
+        print(f"size of all books : {len(allBooks)}")
+        #exclude all records where isbn = old isbn
+        excluding_old_isbn = allBooks.exclude(isbn=check_isbn)
+        print(f"size of all books excluding the old isbn : {len(excluding_old_isbn)}")
+        #check if there are any recrods that match the new isbn
+        match_isbn = excluding_old_isbn.filter(isbn=checkIsbn).exists()
+
+        if not match_isbn:
+            print(f"{checkIsbn} IS valid")
+            return JsonResponse({'valid': True})
+        else :
+            print(f"{check_isbn} IS NOT valid")
+            return JsonResponse({'valid':False})
+    else:
+      print(request.method)
+      return HttpResponse("Not a GET request")
+
+def validate_isbn13_update(request,checkIsbn13,id):
+    print(f" validating {checkIsbn13} for update:")
+    if request.method == 'GET':
+        print(f"title = {checkIsbn13}")
+        print(f"book_id = {id}")
+        book = book = Books.objects.get(book_id=id)
+        check_isbn = book.isbn13 # get old isbn, the one attached to the book
+        print(f"Data to check on : old isbn : {check_isbn}, new isbn : {checkIsbn13}")
+        if not checkIsbn13:#ie if there isnt a new isin to check
+            return JsonResponse({'valid': False, 'error': "No title provided"})
+       
+        #check if new isbn = old isbn, if yes then its valid
+        if checkIsbn13 == check_isbn:
+            print("Old and new match we are good")
+            print(f"{check_isbn} IS valid")
+            return JsonResponse({'valid': True})
+        
+        # if new isbn not equal old isbn, ie its been changed, then we need to check if it matches anything else in the DB thats not the old isbn
+        allBooks = Books.objects.all()
+        print(f"size of all books : {len(allBooks)}")
+        #exclude all records where isbn = old isbn
+        excluding_old_isbn = allBooks.exclude(isbn=check_isbn)
+        print(f"size of all books excluding the old isbn : {len(excluding_old_isbn)}")
+        #check if there are any recrods that match the new isbn
+        match_isbn = excluding_old_isbn.filter(isbn=checkIsbn13).exists()
+
+        if not match_isbn:
+            print(f"{checkIsbn13} IS valid")
+            return JsonResponse({'valid': True})
+        else :
+            print(f"{check_isbn} IS NOT valid")
+            return JsonResponse({'valid':False})
+    else:
+      print(request.method)
+      return HttpResponse("Not a GET request")
+    
 def advanced_search(request):
     start = time.perf_counter()
     #get the fields and make a dictionary
@@ -250,7 +358,16 @@ def add_book(request):
         except Exception as e:
             errors = form.errors
             return JsonResponse({'error':str(e)}, status=500)
-
+        
+def edit_details(request,id):
+    results = Books.objects.filter(book_id = id)
+    if len(results) == 1:
+        #if theres only one result, which there really should be, given this the primary key we are referring to here
+        book_as_dict = results.values().first()
+        return render(request,'edit_book.html',{'dictionary': book_as_dict})
+    else:
+        #either the result of the query is 0 items, or more than 1, in any case, not a valid result
+        return JsonResponse({'message':'invalid book_id'})
 
       
     

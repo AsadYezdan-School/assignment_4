@@ -11,12 +11,23 @@ body {
 }
 
 .search-box {
-    margin-top: 5 px;
-    padding: 20px 20px 20px 20px;
+    margin-top: 2 px;
+    padding: 10px 10px 10px 10px;
     border: 2px solid #000000;
     font-size: 16px;
     width: 300px; /* Adjust width for better responsiveness */
     background-color: #ffffff;
+}
+
+.book-id-box{
+    margin-top: 2 px;
+    padding: 10px 10px 10px 10px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    width: 300px; /* Adjust width for better responsiveness */
+    background-color: #ffffff;
+    opacity:0.5;
+    cursor: not-allowed;
 }
 
 .search-button {
@@ -28,24 +39,6 @@ body {
     cursor: pointer;
 }
 .submit-button{
-    width: 50px;
     opacity: 0.5; 
     cursor: not-allowed
 }
-
-h4 {
-    margin-bottom: 0px; /* Reduces space between <h4> and the search box */
-    font-size: 18px; /* Optional: Adjust font size for better alignment */
-}
-
-form {
-    margin: 0; /* Remove default margin to reduce spacing around the form */
-}
-
-.validate-button{
-    display: block;
-    margin-top: 10px;
-    padding:5px;
-    width: 1000px;
-}
-  
