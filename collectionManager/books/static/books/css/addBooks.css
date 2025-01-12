@@ -28,5 +28,6 @@ body {
     cursor: pointer;
 }
 .submit-button{
-    display:none;
+    opacity: 0.5; 
+    cursor: not-allowed
 }

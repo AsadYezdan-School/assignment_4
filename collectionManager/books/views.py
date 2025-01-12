@@ -12,6 +12,8 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from .forms import BookForm
+from django.views.decorators.csrf import csrf_protect
+import json
 
 def home(request):
     #load the landing page
@@ -50,12 +52,9 @@ def queryDB(request,searchString):
     else:
      return HttpResponse(" The request wasnt a POST, this shouldnt happen")
 
-def addBook(request):
-    return render(request,'addBooks.html', )
-
 
 def validate_title(request,title):
-   print(" made it to the validation method!")
+   print(f"validating {title}...")
    if request.method == 'GET':
         print(f"title = {title}")
         if not title:
@@ -66,15 +65,17 @@ def validate_title(request,title):
         match_orig_title = Books.objects.filter(original_title__iexact=title).exists()
 
         if not match_title and not match_orig_title:
+            print(f"{title} IS valid")
             return JsonResponse({'valid': True})
         else :
+            print(f"{title} IS NOT valid")
             return JsonResponse({'valid':False})
    else:
       print(request.method)
       return HttpResponse("Not a GET request")
    
 def validate_isbn(request,checkIsbn):
-   print(" made it to the validation method!")
+   print(f" validating {checkIsbn}...")
    if request.method == 'GET':
         print(f"isbn =  {checkIsbn}")
         if not checkIsbn:
@@ -82,11 +83,12 @@ def validate_isbn(request,checkIsbn):
         
         #look through DB for books with the same title
         querySet = Books.objects.filter(isbn=checkIsbn)
-        print(querySet.values())
         match_isbn = querySet.exists()#returns true if the query set isnt empty
         if not match_isbn:
+            print(f"{checkIsbn} IS valid")
             return JsonResponse({'valid': True})
         else :
+            print(f"{checkIsbn} IS NOT valid")
             return JsonResponse({'valid': False})
    else:
       print(request.method)
@@ -222,17 +224,32 @@ def delete_book(request, id):
         return redirect(previous_url)
     else:
         return render(request, 'home.html')
-    
+
+def addBook(request):
+    return render(request,'addBooks.html', )   
+
+@csrf_protect
 def add_book(request):
+    print(" made it to the view, the url seems to be working")
     if request.method == 'POST':
-        form = BookForm(request.POST)
-        if form.is_valid():
-            #actually add the book
-            form.save()
-            return redirect()#whatever a sucessful book addition looks like
-    else:
-        errors = form.errors
-        return render(request, 'add_book', {'form':form})
+        try:
+            data = request.POST
+            print(f" type of data is {type(data)} adn it looks like : {data}")
+            form = BookForm(data)
+            if form.is_valid():
+                try:
+                    print(f"Cleaned data = {form.cleaned_data}")
+                    #actually add the book
+                    form.save()
+                    return JsonResponse({'message':'Book was successfully added'},status=200)
+                except Exception as e:
+                    print(f"Error during form save {e}")
+                    return JsonResponse({'message':'Book was not added','detils':str(e)},status=500)
+            else:
+                return JsonResponse({'message':'Book was not added','errors': form.errors},status=400)
+        except Exception as e:
+            errors = form.errors
+            return JsonResponse({'error':str(e)}, status=500)
 
 
       

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <link rel="stylesheet" href="{% static 'books/css/addBooks.css' %}">
-<script src="{% static 'books/js/addBooks.js' %}"></script>
+<script src="{% static 'books/js/addBooks.js' %}" defer></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,41 +15,43 @@
             <!--Gonna need to make some AJAX requests via JS to verify some of inputs into the fields below are valid-->
             <div name = 'title'>
                 <form method="GET">
-                    <input type="text" class="search-box" placeholder=" Full Title" name="full_title" id = 'full_title' pattern=".*\S.*" required>
-                    <button onclick="validateTitle(event)" name = 'checkTitle'>Check Duplicates</button>
+                    <input type="text" class="search-box" placeholder=" Full Title" name="full_title" id = 'full_title' pattern=".*\S.*" contenteditable="true" required>
                 </form>
             </div>
             <div name = 'isbn'>
-                <form action="" method="POST"></form>
-                    <input type="text" class="search-box" placeholder="ISBN" name="isbn" id = 'isbn' pattern=".*\S.*" required>
-                    <button onclick="validateISBN(event)" name = 'checkISBN'>Check Duplicates</button>
+                <form action="" method="POST">
+                    <input type="text" class="search-box" placeholder="ISBN" name="isbn" id = 'isbn' pattern=".*\S.*" contenteditable="true" required>
                 </form>
             </div>
             <div name = authors>
-                <form action="" method="POST">    
-                    <input type="text" class="search-box" placeholder="Authors" name="authors" pattern=".*\S.*" required>
+                <form >    
+                    <input type="text" class="search-box" placeholder="Authors" name="authors" id="authors" pattern=".*\S.*" required>
                 </form>
             </div>
             <div name = 'publicationYear'>
-                <form action="" method="POST">
-                    <input type="text" class="search-box" placeholder="Year Of Publication" name="title" pattern=".*\S.*" required>
+                <form>
+                    <input type="text" class="search-box" placeholder="Year Of Publication" name="publication_year" id = "publication_year" pattern=".*\S.*" required>
                 </form>
             </div>
             <div name = 'url'>
-                <form action="" method="POST">
-                    <input type="text" class="search-box" placeholder="URL For Image" name="url" pattern=".*\S.*" required>
+                <form>
+                    <input type="text" class="search-box" placeholder="URL For Image" name="url" id="url" pattern=".*\S.*" required>
                 </form>
             </div>
             <div name = ' languageCode'>
-                <form action="" method="POST">
-                    <input type="text" class="search-box" placeholder="Language Code" name="title" pattern=".*\S.*" required>
+                <form>
+                    <input type="text" class="search-box" placeholder="Language Code(Use 'eng' for english)" name="lang_code" id="lang_code" pattern=".*\S.*" required>
                 </form>
             </div>
-            <button onclick="validateInputs(event)">Check Duplicates</button>
-            <button class="sumbit-button" onclick = "addRecord(event)">Submit Data
+            <button onclick="validateInputs(event)">Validate Inputs</button>
+            <form onsubmit = "addRecord(event)">
+                {% csrf_token %}
+                <button class="submit-button" type="submit" id="submit_button" disabled>Add Book</button>
+            </form>
        </main>
     </body>
 </html>
+
 
 
 
