@@ -14,5 +14,6 @@ urlpatterns = [
     path("advanced-search/", views.advanced_search, name = "advanced-search"),
     path("upload-books/", views.upload_books, name="upload-books"),
     path("delete-book/id=<int:id>/", views.delete_book,name="delete-book"),
-    path("edit-details/id=<int:id>",views.edit_details,name="edit-details")
+    path("edit-details/id=<int:id>/",views.edit_details,name="edit-details"),
+    path("update-record/<int:id>", views.update_record, name = 'updateRecord'),
 ]

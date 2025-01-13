@@ -54,7 +54,7 @@
                 {%endif%}
             {%endfor%}
             <button class = "validate-button" onclick="validateInputs(event)">Validate Inputs</button>
-            <form onsubmit = "updateRecord(event)">
+            <form method = 'POST' onsubmit = "updateRecord(event)">
                 {% csrf_token %}
                 <button class="submit-button" type="submit" id="submit_button" disabled>Add Book</button>
             </form>

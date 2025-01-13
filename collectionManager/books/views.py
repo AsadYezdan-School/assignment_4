@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from .forms import BookForm
 from django.views.decorators.csrf import csrf_protect
-import json
+from django.forms.models import model_to_dict
 
 def home(request):
     #load the landing page
@@ -352,22 +352,63 @@ def add_book(request):
                     return JsonResponse({'message':'Book was successfully added'},status=200)
                 except Exception as e:
                     print(f"Error during form save {e}")
-                    return JsonResponse({'message':'Book was not added','detils':str(e)},status=500)
+                    return JsonResponse({'message':'Book was not added','details':str(e)},status=500)
             else:
                 return JsonResponse({'message':'Book was not added','errors': form.errors},status=400)
         except Exception as e:
             errors = form.errors
             return JsonResponse({'error':str(e)}, status=500)
-        
+
 def edit_details(request,id):
-    results = Books.objects.filter(book_id = id)
-    if len(results) == 1:
-        #if theres only one result, which there really should be, given this the primary key we are referring to here
-        book_as_dict = results.values().first()
-        return render(request,'edit_book.html',{'dictionary': book_as_dict})
+    if request.method == 'GET':
+        book = Books.objects.get(book_id=id)
+        book_as_dict  = model_to_dict(book)
+        return render(request, 'edit_book.html',{'dictionary':book_as_dict})
     else:
-        #either the result of the query is 0 items, or more than 1, in any case, not a valid result
-        return JsonResponse({'message':'invalid book_id'})
+        return HttpResponse("Request was not a get, that shouldnt happen")
+    
+@csrf_protect
+def update_record(request,id):
+    if request.method == 'POST':
+        try:
+            data = request.POST
+            form = BookForm(data)
+            if form.is_valid():
+                try: 
+                    book = Books.objects.get(book_id=id)
+                    book.goodreads_book_id=form.cleaned_data['goodreads_book_id']
+                    book.best_book_id=form.cleaned_data['best_book_id']
+                    book.work_id=form.cleaned_data['work_id']
+                    book.books_count=form.cleaned_data['books_count']
+                    book.isbn=form.cleaned_data['isbn']
+                    book.isbn13=form.cleaned_data['isbn13']
+                    book.original_publication_year=form.cleaned_data['original_publication_year']
+                    book.original_title=form.cleaned_data['original_title']
+                    book.title=form.cleaned_data['title']
+                    book.language_code=form.cleaned_data['language_code']
+                    book.average_rating=form.cleaned_data['average_rating']
+                    book.ratings_count=form.cleaned_data['ratings_count']
+                    book.work_ratings_count=form.cleaned_data['work_ratings_count']
+                    book.work_text_reviews_count=form.cleaned_data['work_text_reviews_count']
+                    book.ratings_1=form.cleaned_data['ratings_1']
+                    book.ratings_2=form.cleaned_data['ratings_2']
+                    book.ratings_3=form.cleaned_data['ratings_3']
+                    book.ratings_4=form.cleaned_data['ratings_4']
+                    book.ratings_5=form.cleaned_data['ratings_5']
+                    book.image_url=form.cleaned_data['image_url']
+                    book.small_image_url=form.cleaned_data['small_image_url']
+                    book.save()
+                    return JsonResponse({'message':'Record updated successfully'}, status = 200)
+                except Exception as e:
+                    print(f"Error during form save {e}")
+                    return JsonResponse({'message':'Record was not updated','details':str(e)},status=500)
+            else:
+                return JsonResponse({'message':'Book was not added','errors': form.errors},status=400)
+        except Exception as e:
+            errors = form.errors
+            return JsonResponse({'error':str(e)}, status=500)
+    else:
+        return HttpResponse("Request was not a post, this shoulnt have happened")
 
       
     

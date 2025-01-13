@@ -213,48 +213,65 @@ async function validateInputs(event){
 async function updateRecord(event){
     event.preventDefault();
     console.log("made it to the update record method")
-    /* console.log("made it to the JS method")
+    
     event.preventDefault();
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     console.log("submit button was pushed")
-    let title = document.getElementById('full_title').value;
+    let book_id = document.getElementById('book_id').value;   
+    let goodreads_book_id = document.getElementById('goodreads_book_id').value;
+    let best_book_id = document.getElementById('best_book_id').value;
+    let work_id = document.getElementById('work_id').value;
+    let books_count = document.getElementById('books_count').value;
     let isbn = document.getElementById('isbn').value;
+    let isbn13 = document.getElementById('isbn13').value;
     let authors = document.getElementById('authors').value;
-    let publication_year = document.getElementById('publication_year').value;
-    let url = document.getElementById('url').value;
-    let language_code = document.getElementById('lang_code').value;
-    let avg_rating = 0.0;
-    let rating_count = 0;
-    let formDictionary = {
-        "goodreads_book_id":"",
-        "best_book_id":"",
-        "work_id":"",
-        "books_count":"",
-        "isbn":isbn,
-        "isbn13":isbn,
-        "authors":authors,
-        "original_publication_year":publication_year,
-        "original_title":title,
-        "title":title,
-        "language_code":language_code,
-        "average_rating": avg_rating,
-        "ratings_count":rating_count,
-        "work_ratings_count":rating_count,
-        "work_text_reviews_count":rating_count,
-        "ratings_1":rating_count,
-        "ratings_2":rating_count,
-        "ratings_3":rating_count,
-        "ratings_4":rating_count,
-        "ratings_5":rating_count,
-        "image_url":url,
-        "small_image_url":url
+    let original_publication_year = document.getElementById('original_publication_year').value;
+    let original_title = document.getElementById('original_title').value;
+    let full_title = document.getElementById('full_title').value;
+    let language_code = document.getElementById('language_code').value;
+    let average_rating= document.getElementById('average_rating').value;
+    let ratings_count= document.getElementById('ratings_count').value;
+    let work_ratings_count = document.getElementById('work_ratings_count').value;
+    let work_text_reviews_count = document.getElementById('work_text_reviews_count').value;
+    let ratings_1 = document.getElementById('ratings_1').value;
+    let ratings_2 = document.getElementById('ratings_2').value;
+    let ratings_3 = document.getElementById('ratings_3').value;
+    let ratings_4 = document.getElementById('ratings_4').value;
+    let ratings_5 = document.getElementById('ratings_5').value;
+    let image_url = document.getElementById('image_url').value;
+    let small_image_url = document.getElementById('small_image_url').value;
 
+    let formDictionary = {
+        "goodreads_book_id":goodreads_book_id,
+        "best_book_id":best_book_id,
+        "work_id":work_id,
+        "books_count":books_count,
+        "isbn":isbn,
+        "isbn13":isbn13,
+        "authors":authors,
+        "original_publication_year":original_publication_year,
+        "original_title":original_title,
+        "full_title":full_title,
+        "language_code":language_code,
+        "average_rating": average_rating,
+        "ratings_count":ratings_count,
+        "work_ratings_count":work_ratings_count,
+        "work_text_reviews_count":work_text_reviews_count,
+        "ratings_1":ratings_1,
+        "ratings_2":ratings_2,
+        "ratings_3":ratings_3,
+        "ratings_4":ratings_4,
+        "ratings_5":ratings_5,
+        "image_url":image_url,
+        "small_image_url":small_image_url
     }
     console.log("made the dictionary")
     let formData = new URLSearchParams(formDictionary).toString();
     let baseUrl = window.location.origin;
-    let redirectUrl = baseUrl + '/books/add-book/add-record/';
+    let redirectUrl = baseUrl + `/books/update-record/${book_id}`;
     console.log(`redirecting to ${redirectUrl} to add book`)
+    let previousUrl = window.history.go(-2);
+    console.log(`will return to ${previousUrl}`)
     try{
         const response = await fetch(redirectUrl,{
             method:'POST',
@@ -262,14 +279,16 @@ async function updateRecord(event){
             body: formData
         });
         if (response.ok){
-            console.log("Book added");
-            alert("Book was successfully added");
+            console.log("Record added");
+            alert("Record was updated successfully");
+            window.location.href = previousURl; //recirect to where we were before the edit page opened
         }else{
-            console.log("Book couldnt be added");
+            console.log("Record couldnt be updated");
+            alert("Record couldnt be updated, see console logs in the developers console for details")
         }
     }catch(error) {
         console.error(error);
-    } */
+    } 
 }
 console.log("JS Script loaded!")
 
