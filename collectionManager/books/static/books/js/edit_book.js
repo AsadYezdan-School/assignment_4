@@ -1,6 +1,6 @@
 //page settings
 //set up listeners to lock submit anytime the fields are being changed
-let titleInput = document.getElementById('full_title');
+let titleInput = document.getElementById('title');
 let isbnInput = document.getElementById('isbn');
 let orig_titleInput = document.getElementById('original_title');
 let isbn13_Input = document.getElementById('isbn13');
@@ -13,8 +13,8 @@ isbn13_Input.addEventListener('focus',checkInput)
 async function validateTitle(event){
     event.preventDefault();
     const book_id = document.getElementById('book_id').value;
-    const title = document.getElementById('full_title').value;
-    const titleDiv = document.getElementById('full_title');
+    const title = document.getElementById('title').value;
+    const titleDiv = document.getElementById('title');
     const orig_titleDiv = document.getElementById('original_title')
     const encodedTitle = encodeURIComponent(title);
     console.log(`checking title : ${title}`);
@@ -217,17 +217,23 @@ async function updateRecord(event){
     event.preventDefault();
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     console.log("submit button was pushed")
-    let book_id = document.getElementById('book_id').value;   
-    let goodreads_book_id = document.getElementById('goodreads_book_id').value;
-    let best_book_id = document.getElementById('best_book_id').value;
-    let work_id = document.getElementById('work_id').value;
+    let book_id = document.getElementById('book_id').value  
+    let goodreads_book_id = document.getElementById('goodreads_book_id').value ?? 0;
+    goodreads_book_id = goodreads_book_id || 404;
+    console.log("heres goodreads_book_id")
+    console.log(goodreads_book_id)
+    let best_book_id = document.getElementById('best_book_id').value || 404;
+    best_book_id = best_book_id ?? 404;
+    let work_id = document.getElementById('work_id').value || 404;
+    work_id = work_id || 404;
     let books_count = document.getElementById('books_count').value;
+    books_count = books_count ?? 0;
     let isbn = document.getElementById('isbn').value;
     let isbn13 = document.getElementById('isbn13').value;
     let authors = document.getElementById('authors').value;
     let original_publication_year = document.getElementById('original_publication_year').value;
     let original_title = document.getElementById('original_title').value;
-    let full_title = document.getElementById('full_title').value;
+    let title = document.getElementById('title').value;
     let language_code = document.getElementById('language_code').value;
     let average_rating= document.getElementById('average_rating').value;
     let ratings_count= document.getElementById('ratings_count').value;
@@ -242,6 +248,7 @@ async function updateRecord(event){
     let small_image_url = document.getElementById('small_image_url').value;
 
     let formDictionary = {
+        "book_id":book_id,
         "goodreads_book_id":goodreads_book_id,
         "best_book_id":best_book_id,
         "work_id":work_id,
@@ -251,7 +258,7 @@ async function updateRecord(event){
         "authors":authors,
         "original_publication_year":original_publication_year,
         "original_title":original_title,
-        "full_title":full_title,
+        "title":title,
         "language_code":language_code,
         "average_rating": average_rating,
         "ratings_count":ratings_count,
@@ -265,12 +272,18 @@ async function updateRecord(event){
         "image_url":image_url,
         "small_image_url":small_image_url
     }
-    console.log("made the dictionary")
+    console.log("you are update to update with these values :")
+    for (const key in formDictionary) {
+        if (formDictionary.hasOwnProperty(key)) { // Ensures it is an own property
+          console.log(`Key: ${key}, Value: ${formDictionary[key]}`);
+        }
+      }
+    alert("Do you wanna continue")
     let formData = new URLSearchParams(formDictionary).toString();
     let baseUrl = window.location.origin;
     let redirectUrl = baseUrl + `/books/update-record/${book_id}`;
     console.log(`redirecting to ${redirectUrl} to add book`)
-    let previousUrl = window.history.go(-2);
+    let previousUrl = document.referrer;
     console.log(`will return to ${previousUrl}`)
     try{
         const response = await fetch(redirectUrl,{
@@ -281,7 +294,7 @@ async function updateRecord(event){
         if (response.ok){
             console.log("Record added");
             alert("Record was updated successfully");
-            window.location.href = previousURl; //recirect to where we were before the edit page opened
+            window.location.href = previousUrl; //recirect to where we were before the edit page opened
         }else{
             console.log("Record couldnt be updated");
             alert("Record couldnt be updated, see console logs in the developers console for details")

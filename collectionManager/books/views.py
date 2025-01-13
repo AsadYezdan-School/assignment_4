@@ -169,7 +169,7 @@ def validate_isbn_update(request,checkIsbn,id):
 def validate_isbn13_update(request,checkIsbn13,id):
     print(f" validating {checkIsbn13} for update:")
     if request.method == 'GET':
-        print(f"title = {checkIsbn13}")
+        print(f"isbn13 = {checkIsbn13}")
         print(f"book_id = {id}")
         book = book = Books.objects.get(book_id=id)
         check_isbn = book.isbn13 # get old isbn, the one attached to the book
@@ -369,16 +369,23 @@ def edit_details(request,id):
     
 @csrf_protect
 def update_record(request,id):
+    print(" made it to the update record view")
     if request.method == 'POST':
         try:
+            print(f"about tpo get the dictionary")
             data = request.POST
+            print("got the dictionary")
             form = BookForm(data)
+            print("about to check form is valid")
             if form.is_valid():
+                print("the form is valid")
+                print("heres what form looks like ", form.cleaned_data)
                 try: 
                     book = Books.objects.get(book_id=id)
+                    print(f"got the book {book.title}")
                     book.goodreads_book_id=form.cleaned_data['goodreads_book_id']
-                    book.best_book_id=form.cleaned_data['best_book_id']
-                    book.work_id=form.cleaned_data['work_id']
+                    book.best_book_id=form.cleaned_data['best_book_id'] 
+                    book.work_id=form.cleaned_data['work_id'] 
                     book.books_count=form.cleaned_data['books_count']
                     book.isbn=form.cleaned_data['isbn']
                     book.isbn13=form.cleaned_data['isbn13']
@@ -397,12 +404,15 @@ def update_record(request,id):
                     book.ratings_5=form.cleaned_data['ratings_5']
                     book.image_url=form.cleaned_data['image_url']
                     book.small_image_url=form.cleaned_data['small_image_url']
+                    for field in book._meta.fields:
+                        print(f"{field.name}: {getattr(book, field.name)}")
                     book.save()
                     return JsonResponse({'message':'Record updated successfully'}, status = 200)
                 except Exception as e:
                     print(f"Error during form save {e}")
                     return JsonResponse({'message':'Record was not updated','details':str(e)},status=500)
             else:
+                print("fomr ")
                 return JsonResponse({'message':'Book was not added','errors': form.errors},status=400)
         except Exception as e:
             errors = form.errors
