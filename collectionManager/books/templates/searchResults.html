@@ -32,7 +32,7 @@
                         {% if book.book_id %}
                         <button class="ellipsis" data-book-id="{{ book.book_id }}" >⋯</button>
                         <div class="options_menu" id="popup-{{ book.book_id }}">
-                            <form action="{% url 'edit-details' book.book_id %}" onsubmit="return confirm('You are about to be redirected')">
+                            <form action="{% url 'edit-details' book.book_id %}">
                                 <button type = submit>Edit Details</button>
                             </form>
                             <form action = "{% url 'delete-book' book.book_id%}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this {{book.title}}? This action in non-reversible!');">

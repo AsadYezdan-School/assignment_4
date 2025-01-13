@@ -220,8 +220,6 @@ async function updateRecord(event){
     let book_id = document.getElementById('book_id').value  
     let goodreads_book_id = document.getElementById('goodreads_book_id').value ?? 0;
     goodreads_book_id = goodreads_book_id || 404;
-    console.log("heres goodreads_book_id")
-    console.log(goodreads_book_id)
     let best_book_id = document.getElementById('best_book_id').value || 404;
     best_book_id = best_book_id ?? 404;
     let work_id = document.getElementById('work_id').value || 404;
@@ -272,13 +270,7 @@ async function updateRecord(event){
         "image_url":image_url,
         "small_image_url":small_image_url
     }
-    console.log("you are update to update with these values :")
-    for (const key in formDictionary) {
-        if (formDictionary.hasOwnProperty(key)) { // Ensures it is an own property
-          console.log(`Key: ${key}, Value: ${formDictionary[key]}`);
-        }
-      }
-    alert("Do you wanna continue")
+    confirm("Are you sure you want to submit your edits?")
     let formData = new URLSearchParams(formDictionary).toString();
     let baseUrl = window.location.origin;
     let redirectUrl = baseUrl + `/books/update-record/${book_id}`;
