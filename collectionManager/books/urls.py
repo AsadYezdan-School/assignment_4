@@ -16,4 +16,6 @@ urlpatterns = [
     path("delete-book/id=<int:id>/", views.delete_book,name="delete-book"),
     path("edit-details/id=<int:id>/",views.edit_details,name="edit-details"),
     path("update-record/<int:id>", views.update_record, name = 'updateRecord'),
+    path("bulkAdd/", views.bulk_add_books, name = 'bulk-add-books'),
+    path("bulkAdd/validateJSON", views.validateJSON,name='validateJSON')
 ]

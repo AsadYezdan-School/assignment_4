@@ -14,6 +14,7 @@ from django.urls import reverse
 from .forms import BookForm
 from django.views.decorators.csrf import csrf_protect
 from django.forms.models import model_to_dict
+import json
 
 def home(request):
     #load the landing page
@@ -420,7 +421,42 @@ def update_record(request,id):
     else:
         return HttpResponse("Request was not a post, this shoulnt have happened")
 
+def bulk_add_books(request):
+    return render(request, 'bulkAdd.html')
       
-    
+
+@csrf_protect
+def validateJSON(request):
+    valid_counter = 0
+    if request.method == 'POST':
+        print("got to the Django view")
+        try:
+            # Parse JSON data from the body of the POST request
+            books_data = json.loads(request.body)
+            print(f" type of books{books_data[0:10]}")
+            # Prepare a list to hold the BookForm instances
+            book_forms = []
+            for book_data in books_data:
+                print("making a form   ")
+                # Create a BookForm instance for each book data
+                form = BookForm(book_data)
+                print(f"form looks like {form.cleaned_data}")
+                if form.is_valid():
+                    valid_counter += 1
+                else:
+                    print("Invalid form")
+            
+            if valid_counter == len (book_data):
+                return JsonResponse({"message": "Books added successfully."}, status=201)
+            else:
+                print("Not a valid form ")
+                return JsonResponse({'message':'Invalid format'}, status =200)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+
 
                 

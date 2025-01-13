@@ -44,10 +44,15 @@
                         <h3 class="card-title">{{ book.title }}</h3>
                         <p class="card-author">{{ book.authors }}</p>
                         <p class="card-year_publihsed"> Published : {{book.original_publication_year}}<br>Rating : {{ book.average_rating }}<br> ISBN : {{book.isbn}}</p>
-                        <button onclick="toggle_menu()" class="ellipsis">⋯</button>
-                        <div id = drop_down class="options_menu">
-                            <button>Edit Details</button>
-                            <button>Delete Book</button>
+                        <button class="ellipsis" data-book-id="{{ book.book_id }}" >⋯</button>
+                        <div class="options_menu" id="popup-{{ book.book_id }}">
+                            <form action="{% url 'edit-details' book.book_id %}">
+                                <button type = submit>Edit Details</button>
+                            </form>
+                            <form action = "{% url 'delete-book' book.book_id%}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this {{book.title}}? This action in non-reversible!');">
+                                {% csrf_token %}
+                                <button type="submit">Delete Book</button>
+                            </form>
                         </div>
                     </div>
                 {% endfor %}
@@ -62,6 +67,3 @@
     </body>
 </html>
 
-<!--TO DO LIST OF THINGS I COULD ADD
-2) Some stats on how good the matches are? (Tryna cater to the whole visualisations thing)
--->

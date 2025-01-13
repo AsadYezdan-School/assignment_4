@@ -213,21 +213,29 @@ async function validateInputs(event){
 async function updateRecord(event){
     event.preventDefault();
     console.log("made it to the update record method")
-    
+    let defaultForNone = 404;
     event.preventDefault();
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     console.log("submit button was pushed")
     let book_id = document.getElementById('book_id').value  
-    let goodreads_book_id = document.getElementById('goodreads_book_id').value ?? 0;
-    goodreads_book_id = goodreads_book_id || 404;
-    let best_book_id = document.getElementById('best_book_id').value || 404;
-    best_book_id = best_book_id ?? 404;
+    
+    let goodreads_book_id = document.getElementById('goodreads_book_id').value;
+    goodreads_book_id = goodreads_book_id === 'None' ? 'default-value' : defaultForNone;
+   
+    let best_book_id = document.getElementById('best_book_id').value;
+    best_book_id = best_book_id === 'None' ? 'default-value' : defaultForNone;
+    
     let work_id = document.getElementById('work_id').value || 404;
-    work_id = work_id || 404;
+    work_id = work_id === 'None' ? 'default-value' : defaultForNone;
+    
     let books_count = document.getElementById('books_count').value;
-    books_count = books_count ?? 0;
+    books_count = books_count === 'None' ? 'default-value' : defaultForNone;
+    
     let isbn = document.getElementById('isbn').value;
+
     let isbn13 = document.getElementById('isbn13').value;
+    isbn13 = isbn13 === 'None' ? 'default-value': isbn;
+
     let authors = document.getElementById('authors').value;
     let original_publication_year = document.getElementById('original_publication_year').value;
     let original_title = document.getElementById('original_title').value;
@@ -270,6 +278,9 @@ async function updateRecord(event){
         "image_url":image_url,
         "small_image_url":small_image_url
     }
+    Object.entries(formDictionary).forEach(([key, value]) => {
+        console.log(`Key: ${key}, Value: ${value}`);
+    });
     confirm("Are you sure you want to submit your edits?")
     let formData = new URLSearchParams(formDictionary).toString();
     let baseUrl = window.location.origin;
