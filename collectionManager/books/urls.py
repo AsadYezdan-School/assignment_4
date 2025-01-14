@@ -23,5 +23,7 @@ urlpatterns = [
     path("add-rating/<int:id>",views.add_rating, name = "add-rating"),
     path("submit-rating/", views.submit_rating, name = "submit-rating"),
     path("add-to-read/<int:id>",views.add_to_read, name = "add-to-read"),
-    path("submit-to-read/", views.submit_to_read, name = "submit-to-read")
+    path("submit-to-read/", views.submit_to_read, name = "submit-to-read"),
+    path("lookAtList/",views.lookAtList, name = "LookAtList"),
+    path("view-to-read/<int:id>/", views.view_to_read, name = "view-to-read"),
 ]

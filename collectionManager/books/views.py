@@ -528,6 +528,15 @@ def add_to_read(request, id):
     image_url = book.image_url
     book_id = id
     return render(request, 'toRead.html',{'title':title,'image-url':image_url,'book_id':book_id})
+def lookAtList(request):
+    searchString  = ""
+    some_books=[]
+    elapsed_time = 0
+    num_results = 0
+    list_too_long = False
+    no_results = True
+    empty_search = False
+    return render(request, 'readlist.html',{'some_books':some_books, 'searchString': searchString, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -610,3 +619,33 @@ def submit_to_read(request):
         return JsonResponse({"error": str(e)}, status=500)
     else:
       return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+    
+def view_to_read(request,id):
+    #set some defaults for context
+    some_books=[]
+    elapsed_time = 0
+    num_results = 0
+    list_too_long = False
+    no_results = True
+    empty_search = False
+    if request.method == 'GET':
+            start = time.perf_counter()# get information on DB Querying performance (potentially optimise it somehow)
+            book_ids = ToRead.objects.filter(user_id=id).values_list('book_id', flat=True)# get all relevant book ids
+            some_books = Books.objects.filter(book_id__in=book_ids)#get everything wherebook id matches
+            if len(some_books) == 0:
+                return render(request, 'readList.html',{'some_books':some_books, 'user_id': id, 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
+            else:
+                #if we get here (the hope is to get here almost always)we're all good to post results
+                #SQL Raw Query : SELECT book_id,authors, title FROM books WHERE title LIKE '%{title}%';
+                end = time.perf_counter()
+                elapsed_time = end - start
+                elapsed_time = round(elapsed_time,3)
+                num_results = len(some_books)
+                list_too_long = False
+                no_results = False
+                if len(some_books)>100:
+                    some_books = some_books[:100]
+                    list_too_long = True
+                return render(request, 'readList.html',{'some_books':some_books, 'user_id':id , 'elapsed_time':elapsed_time, 'num_results': num_results, 'list_too_long':list_too_long, 'no_results': no_results})
+    else:
+     return HttpResponse(" The request wasnt a POST, this shouldnt happen")
