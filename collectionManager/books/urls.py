@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
+    
     path("home", views.home, name = "home"),
     path("search-results/<str:searchString>/", views.queryDB,name = "queryDB"),
     path("add-book/", views.addBook, name = "addBook"),
@@ -17,5 +18,6 @@ urlpatterns = [
     path("edit-details/id=<int:id>/",views.edit_details,name="edit-details"),
     path("update-record/<int:id>", views.update_record, name = 'updateRecord'),
     path("bulkAdd/", views.bulk_add_books, name = 'bulk-add-books'),
-    path("bulkAdd/validateJSON", views.validateJSON,name='validateJSON')
+    path("bulkAdd/validateJSON/", views.validateJSON,name='validateJSON'),
+    path("bulkAdd/addFromJSON/", views.addFromJSON,name='validateJSON')
 ]

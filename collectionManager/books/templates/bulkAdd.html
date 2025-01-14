@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{% static 'books/css/bulkAdd.css' %}">
+    <script src="{% static 'books/js/bulkAdd.js' %}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+
+</head>
+    <body>
+        <main>
+            <h1 class="title-container">Add Books Via JSON</h1>
+            <p>To add books via JSON, type your JSON, based on the demo JSON shown below, then press validate to check if your JSON is valid<br>
+            if it is the box will turn green and the add button will activate.</p>
+            <pre>
+[
+{
+"goodreads_book_id": "Integer value representing the Goodreads book ID. Can be left empty if not available. Example: 101",
+"best_book_id": "Integer value representing the Goodreads 'Best Book ID'. Example: 201",
+"work_id": "Integer value representing the Goodreads work ID. Example: 301",
+"books_count": "Integer value representing the number of copies available for this book. Example: 1",
+"isbn": "String (max length 20) for the ISBN number of the book. It can be empty if not available. Example: '9781234567890'",
+"isbn13": "String (max length 20) for the 13-digit ISBN number. It can be empty if not available. Example: '9781234567890123'",
+"authors": "Text field containing the authors' names. Multiple authors can be separated by commas. Example: 'John Doe, Jane Smith'",
+"original_publication_year": "Integer value for the year the book was originally published. Example: 2020",
+"original_title": "Text field for the original title of the book. Can be empty if not available. Example: 'The Great Adventure'",
+"title": "Text field for the title of the book in the current edition. Example: 'The Great Adventure: Journey Begins'",
+"language_code": "String (max length 10) representing the language code for the book. Example: 'en' for English, 'es' for Spanish",
+"average_rating": "Float value representing the average rating of the book. Can be null if not available. Example: 4.5",
+"ratings_count": "Integer value representing the total number of ratings. Can be null if not available. Example: 5000",
+"work_ratings_count": "Integer value representing the total number of ratings for the work. Can be null if not available. Example: 5200",
+"work_text_reviews_count": "Integer value representing the number of text reviews for the work. Can be null if not available. Example: 150",
+"ratings_1": "Integer value representing the count of 1-star ratings. Can be null if not available. Example: 100",
+"ratings_2": "Integer value representing the count of 2-star ratings. Can be null if not available. Example: 200",
+"ratings_3": "Integer value representing the count of 3-star ratings. Can be null if not available. Example: 500",
+"ratings_4": "Integer value representing the count of 4-star ratings. Can be null if not available. Example: 1500",
+"ratings_5": "Integer value representing the count of 5-star ratings. Can be null if not available. Example: 2700",
+"image_url": "Text field for the URL of the book cover image. Can be empty if not available. Example: 'https://example.com/book_cover.jpg'",
+"small_image_url": "Text field for the URL of a smaller version of the book cover image. Can be empty if not available. Example: 'https://example.com/book_cover_small.jpg'"
+}
+]
+            </pre>
+            <div class="button-container"></div>
+                <form onsubmit="validateJSON(event)" method = 'POST'>
+                    {% csrf_token %}
+                    <button class = 'search-button' type = "submit">Validate JSON</button>
+                </form>
+                <form onsubmit="addFromJSON(event)">
+                    <button class = 'submit-button' type = "submit" id = "submit_button" disabled>Bulk Add</button>
+                </form>
+            </div>
+            <h2>Enter Your JSON Here</h2>
+            <h4>Press and hold the bottom right corner to increase the size of the text box</h4>
+            <div id = 'jsonBox' contenteditable="true">
+                <textarea id="json" name="story" rows ="50" cols="200">
+                    [{
+
+                    }]
+                    </textarea>
+            </div>
+        </main>
+    </body>
+</html>
+

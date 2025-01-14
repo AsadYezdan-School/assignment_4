@@ -15,6 +15,8 @@ from .forms import BookForm
 from django.views.decorators.csrf import csrf_protect
 from django.forms.models import model_to_dict
 import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 
 def home(request):
     #load the landing page
@@ -423,34 +425,46 @@ def update_record(request,id):
 
 def bulk_add_books(request):
     return render(request, 'bulkAdd.html')
-      
 
 @csrf_protect
+@require_http_methods(["POST"])
 def validateJSON(request):
-    valid_counter = 0
     if request.method == 'POST':
-        print("got to the Django view")
+        print("made it to the view")
         try:
-            # Parse JSON data from the body of the POST request
+            # Parse JSON data from the request body
             books_data = json.loads(request.body)
-            print(f" type of books{books_data[0:10]}")
-            # Prepare a list to hold the BookForm instances
-            book_forms = []
+
+            # Iterate over each book in the list
+            valid_counter = 0
+            total_books = len(books_data)
+            print(f"Total number of books is {total_books}")
+
             for book_data in books_data:
-                print("making a form   ")
-                # Create a BookForm instance for each book data
-                form = BookForm(book_data)
-                print(f"form looks like {form.cleaned_data}")
-                if form.is_valid():
-                    valid_counter += 1
-                else:
-                    print("Invalid form")
-            
-            if valid_counter == len (book_data):
-                return JsonResponse({"message": "Books added successfully."}, status=201)
+                print(book_data)  # Debugging
+                print("-------------------------------------------------------------------------------------------------")
+                # Filter out only the fields that are defined in the form
+                filtered_data = {key: book_data[key] for key in BookForm.Meta.fields if key in book_data}
+
+                # Create a BookForm instance
+                try:
+                    form = BookForm(data=filtered_data)
+                    if form.is_valid():
+                        valid_counter += 1
+                    else:
+                        print(f"Invalid form errors: {form.errors}")
+                except Exception as e:
+                    print(f"Form creation error: {e}")
+            print(f"valid counter = {valid_counter}")
+            if valid_counter == total_books:
+                return JsonResponse({"message": "All books are valid."}, status=201)
             else:
-                print("Not a valid form ")
-                return JsonResponse({'message':'Invalid format'}, status =200)
+                return JsonResponse({
+                    "message": "Some books are invalid.",
+                    "valid_count": valid_counter,
+                    "total_count": total_books
+                }, status=400)
+
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format."}, status=400)
         except Exception as e:
@@ -458,5 +472,46 @@ def validateJSON(request):
     else:
         return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def addFromJSON(request):
+    if request.method == 'POST':
+        print("made it to the view")
+        try:
+            # Parse JSON data from the request body
+            books_data = json.loads(request.body)
 
+            # Iterate over each book in the list
+            valid_counter = 0
+            total_books = len(books_data)
+            print(f"Total number of books is {total_books}")
+            new_books = 0
+            for book_data in books_data:
+                # Filter out only the fields that are defined in the form
+                filtered_data = {key: book_data[key] for key in BookForm.Meta.fields if key in book_data}
+
+                # Create a BookForm instance
+                try:
+                    form = BookForm(data=filtered_data)
+                    if form.is_valid():
+                        form.save()
+                        new_books+=1
+                    else:
+                        print(f"Invalid form errors: {form.errors}")
+                except Exception as e:
+                    print(f"Form creation error: {e}")
+            if new_books == total_books:
+                return JsonResponse({'message':'Successfully added books'}, status=200)
+            else:
+                return JsonResponse({
+                    "message": "Some books are invalid.",
+                    "new_books": new_books,
+                    "total_count": total_books
+                }, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
                 
