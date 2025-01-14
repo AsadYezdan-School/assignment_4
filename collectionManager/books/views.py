@@ -5,6 +5,7 @@ import time
 from django.db.models import Q
 from .models import Books
 from .models import BookTags
+from django.db.models import Avg
 from .models import Ratings
 from .models import Tags
 from .models import ToRead
@@ -547,6 +548,13 @@ def submit_rating(request):
                 if form.is_valid():
                     form.save()
                     new_books+=1
+                    #update some stats about the book associated with this book_id
+                    book_id_change = book_data["book_id"]
+                    average_rating = Ratings.objects.filter(book_id=book_id_change).aggregate(Avg('rating'))
+                    book_to_edit = Books.objects.get(book_id_change)
+                    book_to_edit.ratings_count +=1
+                    book_to_edit.average_rating = average_rating
+                    book_to_edit.save()
                 else:
                     print(f"Invalid form errors: {form.errors}")
             except Exception as e:
