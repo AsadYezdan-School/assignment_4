@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{% static 'books/css/readList.css' %}">
+    <script src="{% static 'books/js/readList.js' %}"></script>
+</head>
+    <body>
+        <main>
+            <h1 class="title-container">Read List For User {{user_id}}</h1>
+            <div>
+                <form action = ""  method="POST" onsubmit="submitQuery(event)">
+                    {% csrf_token %}
+                    <input type="text" class = 'search-box' placeholder="Enter user id" name="search" pattern=".*\S.*" required>
+                    <button class="search-button" type="submit">Retrieve</button>
+                </form>
+            </div>
+            <div class="card-container">
+                {% for book in some_books %}
+                    <div class="card" id="card-{{ book.book_id }}">
+                        <img src="{{ book.image_url}}" alt="{{ book.title }}" class="card-image">
+                        <h3 class="card-title">{{ book.title }}</h3>
+                        <p class="card-author">{{ book.authors }}</p>
+                        <p class="card-year_publihsed"> Published : {{book.original_publication_year}}<br>Rating : {{ book.average_rating }}<br> ISBN : {{book.isbn}}</p>
+                        {% if book.book_id %}
+                        <button class="ellipsis" data-book-id="{{ book.book_id }}" >⋯</button>
+                        <div class="options_menu" id="popup-{{ book.book_id }}">
+                            <form action="{% url 'edit-details' book.book_id %}">
+                                <button type = submit>Edit Details</button>
+                            </form>
+                            <form action = "{% url 'delete-book' book.book_id%}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this {{book.title}}? This action in non-reversible!');">
+                                {% csrf_token %}
+                                <button type="submit">Delete Book</button>
+                            </form>
+                            <form action = "{% url 'add-rating' book.book_id%}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">Add Rating</button>
+                            </form>
+                            <form action = "{% url 'add-to-read' book.book_id%}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">Add to Read</button>
+                            </form>
+
+                        </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {%if not no_results%}
+            <p>*Some books just have bad urls associated with them so we cant find any pictures *</p>
+            <p>*Theres not a whole lot we can do about that, sorry :)*</p>
+            {%endif%}
+
+        </main>
+    </body>
+</html>
+
+<!--TO DO LIST OF THINGS I COULD ADD
+2) Some stats on how good the matches are? (Tryna cater to the whole visualisations thing)
+-->
