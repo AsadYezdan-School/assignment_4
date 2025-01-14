@@ -39,6 +39,15 @@
                                 {% csrf_token %}
                                 <button type="submit">Delete Book</button>
                             </form>
+                            <form action = "{% url 'add-rating' book.book_id%}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">Add Rating</button>
+                            </form>
+                            <form action = "{% url 'add-to-read' book.book_id%}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit">Add to Read</button>
+                            </form>
+
                         </div>
                         {% endif %}
                     </div>

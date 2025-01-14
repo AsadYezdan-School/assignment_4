@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Ratings</title>
+    <link rel="stylesheet" href="{% static 'books/css/addRating.css' %}">
+    <script src="{% static 'books/js/addRating.js' %}" defer></script>
+</head>
+    <body>
+        <main>
+            <div class = 'title-container'>
+                <h1>Add Rating To :  {{title}}</h1>
+            </div>
+            <form id = "fields_form" class = 'form' method = 'POST' >
+                {% csrf_token %}
+                <input type="text" class="search-box" placeholder="book_id" name="book_id" id ='book_id' pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$" value = {{book_id}} disabled>
+                <input type="text" class="search-box" placeholder=" Your User ID" name="user_id" id ='user_id' pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$" required contenteditable="true">
+                <input type="text" class="search-box" placeholder=" Your Rating (Not Greater Than 5)" name="rating" id ='rating' pattern = "^\s*(?:[0-4](?:\.\d+)?|5(?:\.0+)?)\s*$" required contenteditable="true">
+             </form>
+             <form onsubmit="addRating(event)">
+                <button type = submit> Add Record</button>
+             </form>
+        </main>
+    </body>
+</html>
+
+<!--TO DO LIST OF THINGS I COULD ADD
+2) Some stats on how good the matches are? (Tryna cater to the whole visualisations thing)
+-->

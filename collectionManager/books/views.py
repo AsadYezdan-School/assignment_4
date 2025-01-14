@@ -11,7 +11,7 @@ from .models import ToRead
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from .forms import BookForm
+from .forms import BookForm, RatingsForm, ToReadForm
 from django.views.decorators.csrf import csrf_protect
 from django.forms.models import model_to_dict
 import json
@@ -515,3 +515,90 @@ def addFromJSON(request):
     else:
         return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
                 
+def add_rating(request, id):
+    book = Books.objects.get(book_id = id)
+    title = book.title
+    image_url = book.image_url
+    book_id = id
+    return render(request, 'addRating.html',{'title':title,'image-url':image_url,'book_id':book_id})
+def add_to_read(request, id):
+    book = Books.objects.get(book_id = id)
+    title = book.title
+    image_url = book.image_url
+    book_id = id
+    return render(request, 'toRead.html',{'title':title,'image-url':image_url,'book_id':book_id})
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def submit_rating(request):
+    if request.method == 'POST':
+      new_books = 0
+      print("made it to the view")
+      try:
+        # Parse JSON data from the request body
+        rating_data = json.loads(request.body)
+        total_data = 1
+        print(f"here is the data {rating_data}")
+        for book_data in rating_data:
+            # Create a BookForm instance
+            try:
+                form = RatingsForm(data=book_data)
+
+                if form.is_valid():
+                    form.save()
+                    new_books+=1
+                else:
+                    print(f"Invalid form errors: {form.errors}")
+            except Exception as e:
+                print(f"Form creation error: {e}")
+        if new_books == total_data:
+            return JsonResponse({'message':'Successfully added books'}, status=200)
+        else:
+            return JsonResponse({
+                "message": "Some books are invalid.",
+                "total_count": total_data
+            }, status=400)
+      except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON format."}, status=400)
+      except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    else:
+      return JsonResponse({"error": "Only POST requests are allowed."}, status=405)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def submit_to_read(request):
+    if request.method == 'POST':
+      new_books = 0
+      print("made it to the view")
+      try:
+        # Parse JSON data from the request body
+        rating_data = json.loads(request.body)
+        total_data = 1
+        print(f"here is the data {rating_data}")
+        for book_data in rating_data:
+            # Create a BookForm instance
+            try:
+                form = ToReadForm(data=book_data)
+
+                if form.is_valid():
+                    form.save()
+                    new_books+=1
+                else:
+                    print(f"Invalid form errors: {form.errors}")
+            except Exception as e:
+                print(f"Form creation error: {e}")
+        if new_books == total_data:
+            return JsonResponse({'message':'Successfully added books'}, status=200)
+        else:
+            return JsonResponse({
+                "message": "Some books are invalid.",
+                "total_count": total_data
+            }, status=400)
+      except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON format."}, status=400)
+      except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    else:
+      return JsonResponse({"error": "Only POST requests are allowed."}, status=405)

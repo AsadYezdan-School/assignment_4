@@ -11,7 +11,7 @@ urlpatterns = [
     path("validate-title-update/<str:title>/<int:id>/", views.validate_title_update, name = "validate-title-update" ),
     path("validate-isbn/<str:checkIsbn>", views.validate_isbn, name = "validate-isbn" ),
     path("validate-isbn-update/<str:checkIsbn>/<int:id>/", views.validate_isbn_update, name = "validate-isbn-update" ),
-    path("validate-isbn13-update/<str:checkIsbn13>/<int:id>/", views.validate_isbn13_update, name = "validate-isbn-update" ),
+    path("validate-isbn13-update/<str:checkIsbn13>/<int:id>/", views.validate_isbn13_update, name = "validate-isbn13-update" ),
     path("advanced-search/", views.advanced_search, name = "advanced-search"),
     path("upload-books/", views.upload_books, name="upload-books"),
     path("delete-book/id=<int:id>/", views.delete_book,name="delete-book"),
@@ -19,5 +19,9 @@ urlpatterns = [
     path("update-record/<int:id>", views.update_record, name = 'updateRecord'),
     path("bulkAdd/", views.bulk_add_books, name = 'bulk-add-books'),
     path("bulkAdd/validateJSON/", views.validateJSON,name='validateJSON'),
-    path("bulkAdd/addFromJSON/", views.addFromJSON,name='validateJSON')
+    path("bulkAdd/addFromJSON/", views.addFromJSON,name='addFromJSON'),
+    path("add-rating/<int:id>",views.add_rating, name = "add-rating"),
+    path("submit-rating/", views.submit_rating, name = "submit-rating"),
+    path("add-to-read/<int:id>",views.add_to_read, name = "add-to-read"),
+    path("submit-to-read/", views.submit_to_read, name = "submit-to-read")
 ]

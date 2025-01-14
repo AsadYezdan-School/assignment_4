@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Ratings</title>
+    <link rel="stylesheet" href="{% static 'books/css/toRead.css' %}">
+    <script src="{% static 'books/js/toRead.js' %}" defer></script>
+</head>
+    <body>
+        <main>
+            <div class = 'title-container'>
+                <h1>Add {{title}} To To-Read</h1>
+            </div>
+            <form id = "fields_form" class = 'form' method = 'POST' >
+                {% csrf_token %}
+                <input type="text" class="search-box" placeholder="book_id" name="book_id" id ='book_id' pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$" value = {{book_id}} disabled>
+                <input type="text" class="search-box" placeholder=" Your User ID" name="user_id" id ='user_id' pattern = "^(?![<>]\s*$)([0-9.]+|[<>]\s+|\s)+$" required contenteditable="true">
+             </form>
+             <form onsubmit="addToRead(event)">
+                <button type = submit> Add To Read</button>
+             </form>
+        </main>
+    </body>
+</html>
+
+<!--TO DO LIST OF THINGS I COULD ADD
+2) Some stats on how good the matches are? (Tryna cater to the whole visualisations thing)
+-->
