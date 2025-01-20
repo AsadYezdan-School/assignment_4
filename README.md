@@ -13,3 +13,8 @@ FOR ALEX : HOW TO GET THIS THING RUNNNING (im sure you know this already but jus
 
 I hope this makes sense and was helpful. Please email me and id be more than happy to show you on my PC if nothing else works,(you can check the timestamps on commmits to make sure that if i show it to you on my PC after the deadline that i didnt write any more code)
 
+TIPS FOR TESTING MY APP
+
+1) For testing the upload via JSON, i wrote some mock JSON i this file 'testAdd.json', you can copy and paste it into the entry box, its supposed to make it more straightforward to test that what i wrote works.
+
+2) All the titles end with -test, so you can test by uploading and then going to the home page and searching for '-test', all the books you add via json should have robots for pictures.
